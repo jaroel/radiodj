@@ -138,9 +138,3 @@ export class MyElement extends MobxLitElement {
     return 'foo';
   }
 }
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'my-element': MyElement;
-  }
-}
