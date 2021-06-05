@@ -12,7 +12,8 @@
     ],
     "scripts": {
         "dev": "vite",
-        "build": "tsc && vite build"
+        "build": "tsc && vite build",
+        "serve": "vite preview --port 8080"
     },
     "dependencies": {
         "@adobe/lit-mobx": "^2.0.0-rc.4",
