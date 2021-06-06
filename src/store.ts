@@ -1,19 +1,3 @@
-import {makeAutoObservable} from 'mobx';
+// Import {createStore} from 'effector';
 
-class CounterStore {
-  count = 0;
-  kek = {};
-  snuk = '';
-  constructor() {
-    makeAutoObservable(this);
-
-    const name = 'World';
-    console.log('Hello %s', name);
-  }
-
-  incCounter() {
-    this.count++;
-  }
-}
-
-export const counterStore = new CounterStore();
+// export const counterStore = createStore(0);

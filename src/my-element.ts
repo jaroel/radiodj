@@ -1,6 +1,7 @@
-import {css, html} from 'lit';
-import {customElement, property} from 'lit/decorators.js';
-import {MobxLitElement} from '@adobe/lit-mobx';
+import {LitElement, css, html} from 'lit';
+import {customElement, property, state} from 'lit/decorators.js';
+
+import {createStore, createEvent} from 'effector-logger';
 
 import '@vaadin/vaadin-button/vaadin-button';
 import '@vaadin/vaadin-app-layout/vaadin-app-layout';
@@ -17,7 +18,14 @@ import '@vaadin/vaadin-lumo-styles/sizing';
 import '@vaadin/vaadin-lumo-styles/spacing';
 import '@vaadin/vaadin-lumo-styles/style';
 
-import {counterStore} from './store';
+const increment = createEvent();
+const decrement = createEvent();
+const resetCounter = createEvent();
+
+const counter = createStore(0)
+  .on(increment, state => state + 1)
+  .on(decrement, state => state - 1)
+  .reset(resetCounter);
 
 /**
  * An example element.
@@ -26,7 +34,7 @@ import {counterStore} from './store';
  * @csspart button - The button
  */
 @customElement('my-element')
-export class MyElement extends MobxLitElement {
+export class MyElement extends LitElement {
   static styles = css`
     h1,
     h2 {
@@ -50,6 +58,16 @@ export class MyElement extends MobxLitElement {
 
   @property()
   name = 'World';
+
+  @state()
+  private value = 0;
+
+  constructor() {
+    super();
+    counter.watch(state => {
+      this.value = state;
+    });
+  }
 
   render() {
     return html`
@@ -124,14 +142,18 @@ export class MyElement extends MobxLitElement {
 
         <h1>Hello, ${this.name}!</h1>
 
-        <vaadin-button @click="${counterStore.incCounter.bind(counterStore)}"
+        <vaadin-button @click="${this.incrementDing}"
           >Button</vaadin-button
         >
-        <div>Clicked ${counterStore.count} times</div>
+        <div>Clicked ${this.value} times</div>
 
         <slot></slot>
       </vaadin-app-layout>
     `;
+  }
+
+  incrementDing() {
+    increment();
   }
 
   foo(): string {
