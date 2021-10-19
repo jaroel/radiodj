@@ -27,6 +27,12 @@ const counter = createStore(0)
   .on(decrement, state => state - 1)
   .reset(resetCounter);
 
+interface MyDataInterface {
+  data: {kek: string}
+}
+
+const backendUrl = 'http://localhost:8000';
+
 /**
  * An example element.
  *
@@ -67,6 +73,18 @@ export class MyElement extends LitElement {
     counter.watch(state => {
       this.value = state;
     });
+
+    const eventSource = new EventSource(`${backendUrl}/sse`);
+    eventSource.addEventListener('barf', this.parseMyEvent);
+    // EventSource.addEventListener('message', console.log);
+  }
+
+  parseMyEvent(event_: Event) {
+    console.log(event_);
+    const messageEvent = (event_ as MessageEvent); // <== This line is Important!!
+    const data: MyDataInterface = JSON.parse(messageEvent.data);
+    console.log(data);
+    increment();
   }
 
   render() {
